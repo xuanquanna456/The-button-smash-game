@@ -1,0 +1,193 @@
+=========================
+BUTTON SMASHER - FLOW
+=========================
+
+[1] SETUP
+-------------------------
+- Khởi động Serial Monitor
+- Cấu hình LED là OUTPUT
+- Cấu hình Button là INPUT
+- Khởi tạo LCD 16x2
+- Hiển thị màn hình chào
+    "-BUTTON SMASHER-"
+    "WHO IS FASTER?"
+- Bật cả 2 LED trong 3 giây
+- Tắt LED
+
+Chuyển sang:
+=> WAIT_START
+
+==================================================
+
+[2] WAIT_START (Chờ người chơi bắt đầu)
+--------------------------------------------------
+Lặp liên tục:
+
+Mỗi 2 giây:
+    Đổi qua lại giữa 2 màn hình
+
+Màn hình 1:
+    "-BUTTON SMASHER-"
+    "WHO IS FASTER?"
+
+Màn hình 2:
+    "PLYR 1 VS PLYR 2"
+    "-CLICK TO START-"
+
+Đồng thời:
+    Chớp cả 2 LED
+
+Kiểm tra nút:
+    Nếu BTN_1 hoặc BTN_2 được nhấn
+
+        Chờ người chơi thả nút
+
+        Hiển thị:
+            "-GAME STARTING!-"
+
+        Đếm ngược:
+            3
+            2
+            1
+            GO!!
+
+        Reset điểm:
+            playerScore_1 = 0
+            playerScore_2 = 0
+
+        Lưu thời điểm bắt đầu:
+            gameStartTimer = millis()
+
+Chuyển sang:
+=> PLAYING
+
+==================================================
+
+[3] PLAYING (Trận đấu diễn ra)
+--------------------------------------------------
+
+Tính:
+    elapsed = millis() - gameStartTimer
+
+Nếu elapsed >= 15000 ms
+    => Hết giờ
+
+Chuyển sang:
+=> GAME_OVER
+
+--------------------------------------------------
+Trong lúc chưa hết giờ:
+
+PLAYER 1:
+    Nếu BTN_1 được nhấn
+    Và cách lần nhấn trước > 50 ms
+
+        playerScore_1++
+
+        Nháy LED xanh
+
+        Chờ thả nút
+
+PLAYER 2:
+    Nếu BTN_2 được nhấn
+    Và cách lần nhấn trước > 50 ms
+
+        playerScore_2++
+
+        Nháy LED đỏ
+
+        Chờ thả nút
+
+--------------------------------------------------
+Cập nhật LCD:
+
+Dòng 1:
+    P1: xxx     P2: xxx
+
+Ví dụ:
+    P1: 15   P2: 18
+
+Dòng 2:
+    TIME: xx SEC
+
+Ví dụ:
+    TIME: 12 SEC
+
+==================================================
+
+[4] GAME_OVER (Kết thúc trận)
+--------------------------------------------------
+
+Xóa LCD
+
+So sánh điểm:
+
+Trường hợp 1:
+    playerScore_1 > playerScore_2
+
+Hiển thị:
+    PLAYER 1 WINNER!
+    PLAYER 2 LOSES!
+
+Nháy LED xanh 3 lần
+
+--------------------------------------------------
+
+Trường hợp 2:
+    playerScore_2 > playerScore_1
+
+Hiển thị:
+    PLAYER 2 WINNER!
+    PLAYER 1 LOSES!
+
+Nháy LED đỏ 3 lần
+
+--------------------------------------------------
+
+Trường hợp 3:
+    playerScore_1 == playerScore_2
+
+Hiển thị:
+    IT'S A TIE
+
+Bật cả 2 LED
+
+--------------------------------------------------
+
+Đợi 3 giây
+
+Tắt LED
+
+Reset trạng thái:
+    gameStart = false
+    gameOver = false
+
+Chuyển về:
+=> WAIT_START
+
+==================================================
+
+SƠ ĐỒ TỔNG QUÁT
+--------------------------------------------------
+
+SETUP
+  |
+  v
+WAIT_START
+  |
+  | (Nhấn nút bắt đầu)
+  v
+COUNTDOWN
+  |
+  v
+PLAYING
+  |
+  | (15 giây hết)
+  v
+GAME_OVER
+  |
+  | (3 giây)
+  v
+WAIT_START
+
+==================================================
