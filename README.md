@@ -46,6 +46,10 @@ A 2-player reaction/speed game built with Arduino, a 16x2 LCD, two LEDs, and two
 | LED — Player 1 | 3 |
 | LED — Player 2 | 12 |
 
+#schematic
+<img width="1276" height="823" alt="image" src="https://github.com/user-attachments/assets/57f4a6e5-adea-4853-8e23-fc9730abde59" />
+
+
 > ⚠️ Buttons are read as **active-LOW** (`digitalRead(...) == LOW` triggers a press), so wire them with a pull-up (internal or external) so the pin reads HIGH when idle.
 
 ## Software Requirements
